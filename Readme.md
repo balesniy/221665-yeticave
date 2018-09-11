@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Алексей Балесный](https://up.htmlacademy.ru/php/6/user/221665).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Стулов](https://htmlacademy.ru/profile/id25231).
 
 ---
 

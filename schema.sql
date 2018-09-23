@@ -16,7 +16,9 @@ create table IF NOT EXISTS bets (
     reg DATETIME,
     amount FLOAT,
     user_id INT,
+    INDEX user(user_id),
     lot_id INT
+    INDEX lot(lot_id)
 );
 create table IF NOT EXISTS categories (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -25,12 +27,14 @@ create table IF NOT EXISTS categories (
 create table IF NOT EXISTS lots (
     id INT PRIMARY KEY AUTO_INCREMENT,
     reg DATETIME,
-    name CHAR(128) FULLTEXT,
-    description TEXT FULLTEXT,
+    name CHAR(128),
+    description TEXT,
+    FULLTEXT INDEX description(description),
     img BLOB,
     finish DATETIME,
     amount_step FLOAT,
     user_id INT,
     winner_id INT,
-    category_id INT
+    category_id INT,
+    INDEX category(category_id)
 );

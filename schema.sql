@@ -11,25 +11,17 @@ create table IF NOT EXISTS users (
     avatar TEXT,
     contact text
 );
-create table IF NOT EXISTS bets (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    reg DATETIME,
-    amount FLOAT,
-    user_id INT,
-    FOREIGN KEY user(user_id) REFERENCES users(id),
-    lot_id INT
-    FOREIGN KEY lot(lot_id) REFERENCES lots(id)
-);
 create table IF NOT EXISTS categories (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name TEXT
+    name TEXT,
+    UNIQUE(name(10))
 );
 create table IF NOT EXISTS lots (
     id INT PRIMARY KEY AUTO_INCREMENT,
     reg DATETIME,
     name CHAR(128),
     description TEXT,
-    FULLTEXT INDEX description(description),
+    FULLTEXT INDEX description_index(description),
     img TEXT,
     finish DATETIME,
     amount_step FLOAT,
@@ -37,4 +29,13 @@ create table IF NOT EXISTS lots (
     winner_id INT,
     category_id INT,
     FOREIGN KEY category(category_id) REFERENCES categories(id)
+);
+create table IF NOT EXISTS bets (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    reg DATETIME,
+    amount FLOAT,
+    user_id INT,
+    FOREIGN KEY user(user_id) REFERENCES users(id),
+    lot_id INT,
+    FOREIGN KEY lot(lot_id) REFERENCES lots(id)
 );

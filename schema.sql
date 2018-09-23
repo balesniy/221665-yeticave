@@ -6,7 +6,6 @@ create table IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name char(64) UNIQUE,
     email char(128) UNIQUE,
-    INDEX email(email),
     password char(64),
     reg DATE,
     avatar TEXT,

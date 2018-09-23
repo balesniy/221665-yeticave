@@ -8,7 +8,7 @@ create table IF NOT EXISTS users (
     email char(128) UNIQUE,
     password char(64),
     reg DATE,
-    avatar BLOB,
+    avatar TEXT,
     contact text
 );
 create table IF NOT EXISTS bets (
@@ -30,7 +30,7 @@ create table IF NOT EXISTS lots (
     name CHAR(128),
     description TEXT,
     FULLTEXT INDEX description(description),
-    img BLOB,
+    img TEXT,
     finish DATETIME,
     amount_step FLOAT,
     user_id INT,

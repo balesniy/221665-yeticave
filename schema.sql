@@ -6,6 +6,7 @@ create table IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name char(64) UNIQUE,
     email char(128) UNIQUE,
+    INDEX email(email),
     password char(64),
     reg DATE,
     avatar TEXT,
@@ -16,9 +17,9 @@ create table IF NOT EXISTS bets (
     reg DATETIME,
     amount FLOAT,
     user_id INT,
-    INDEX user(user_id),
+    FOREIGN KEY user(user_id) REFERENCES users(id),
     lot_id INT
-    INDEX lot(lot_id)
+    FOREIGN KEY lot(lot_id) REFERENCES lots(id)
 );
 create table IF NOT EXISTS categories (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -36,5 +37,5 @@ create table IF NOT EXISTS lots (
     user_id INT,
     winner_id INT,
     category_id INT,
-    INDEX category(category_id)
+    FOREIGN KEY category(category_id) REFERENCES categories(id)
 );

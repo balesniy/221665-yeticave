@@ -11,8 +11,8 @@ VALUES  ("Вася", 'boards@ya.ru', '123'),
 INSERT INTO lots (name, category_id, start_amount, img, user_id, finish)
 VALUES  ('2014 Rossignol District Snowboard', 1, 10999, 'img/lot-1.jpg', 1, DATE_ADD(NOW(), INTERVAL 2 DAY)),
         ('DC Ply Mens 2016/2017 Snowboard', 1, 159999, 'img/lot-2.jpg', 1, DATE_ADD(NOW(), INTERVAL 3 DAY)),
-        ('Крепления Union Contact Pro 2015 года размер L/XL', 6, 8000, 'img/lot-3.jpg', 1, DATE_ADD(NOW(), INTERVAL 1 DA))),
-        ('Ботинки для сноуборда DC Mutiny Charocal', 2, 10999, 'img/lot-4.jpg', 2, DATE_ADD(NOW(), INTERVAL 2 DAY)),
+        ('Крепления Union Contact Pro 2015 года размер L/XL', 6, 8000, 'img/lot-3.jpg', 1, DATE_ADD(NOW(), INTERVAL 14 DAY)),
+        ('Ботинки для сноуборда DC Mutiny Charocal', 2, 10999, 'img/lot-4.jpg', 2, DATE_ADD(NOW(), INTERVAL 21 DAY)),
         ('Куртка для сноуборда DC Mutiny Charocal', 3, 7500, 'img/lot-5.jpg', 2, DATE_ADD(NOW(), INTERVAL 1 DAY)),
         ('Маска Oakley Canopy', 5, 5400, 'img/lot-6.jpg', 2, DATE_ADD(NOW(), INTERVAL 3 DAY));
 INSERT INTO bets (amount, user_id, lot_id)

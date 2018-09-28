@@ -1,7 +1,7 @@
 create database IF NOT EXISTS `221665-yeticave`
     default CHARACTER SET utf8
     default COLLATE utf8_general_ci;
-use yeticave;
+use `221665-yeticave`;
 create table IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name varchar(64),

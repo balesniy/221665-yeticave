@@ -20,10 +20,10 @@ function price_format($price){
     $rub_format = $price>999 ? number_format($price, 0, ".", " ") : $price;
     return "$rub_format ₽";
 };
-function get_time(){
+function get_time($finish_time){
     $current_time = date_create('now');
-    $lot_finish_time = date_create('tomorrow');
+    $lot_finish_time = date_create($finish_time);
     $interval = date_diff($lot_finish_time, $current_time);
-    return $interval->format('%H:%I');
+    return $interval->format('%a дн. %H:%I');
 };
 ?>

@@ -1,6 +1,5 @@
 <?php
-$title = 'Главная';
-
+$title = 'Лот';
 require_once 'init.php';
  
 if (!$link) {
@@ -15,20 +14,25 @@ if (!$link) {
         $error = mysqli_error($link);
         $content = include_template('error.php', ['error' => $error]);
     }
+    $id = intval($_GET['id']);
 
-    $sql = 'SELECT lots.id, finish, name as title, start_amount as price, img as picture, categories.title as category
+    $sql = "SELECT *, (select max(amount) from bets where lot_id=lots.id) as price
     FROM lots
     JOIN categories on category_id=categories.id
-    WHERE finish > NOW()
-    ORDER BY reg_date DESC';
+    WHERE lots.id=$id";
 
     $result = mysqli_query($link, $sql);
     if ($result) {
-        $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        $content = include_template('index.php', [
-            'categories' => $categories,
-            'lots' => $lots
-        ]);
+        if (!mysqli_num_rows($result)) {
+            http_response_code(404);
+            $content = include_template('error.php', ['error' => 'Лот с этим идентификатором не найден']);
+        } else {
+            $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
+            $content = include_template('lot.php', [
+                'categories' => $categories,
+                'lot' => $lot
+            ]);
+        }
     } else {
         $error = mysqli_error($link);
         $content = include_template('error.php', ['error' => $error]);

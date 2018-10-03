@@ -3,36 +3,31 @@ $title = 'Главная';
 
 require_once 'init.php';
  
-if (!$link) {
-    $error = mysqli_connect_error();
-    $content = include_template('error.php', ['error' => $error]);
+$sql = 'SELECT `title`, `promo_class` FROM categories';
+$result = mysqli_query($link, $sql);
+if ($result) {
+    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 } else {
-    $sql = 'SELECT `title`, `promo_class` FROM categories';
-    $result = mysqli_query($link, $sql);
-    if ($result) {
-        $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
-        $error = mysqli_error($link);
-        $content = include_template('error.php', ['error' => $error]);
-    }
+    $error = mysqli_error($link);
+    $content = include_template('error.php', ['error' => $error]);
+}
 
-    $sql = 'SELECT lots.id, finish, name as title, start_amount as price, img as picture, categories.title as category
-    FROM lots
-    JOIN categories on category_id=categories.id
-    WHERE finish > NOW()
-    ORDER BY reg_date DESC';
+$sql = 'SELECT lots.id, finish, name as title, start_amount as price, img as picture, categories.title as category
+FROM lots
+JOIN categories on category_id=categories.id
+WHERE finish > NOW()
+ORDER BY reg_date DESC';
 
-    $result = mysqli_query($link, $sql);
-    if ($result) {
-        $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        $content = include_template('index.php', [
-            'categories' => $categories,
-            'lots' => $lots
-        ]);
-    } else {
-        $error = mysqli_error($link);
-        $content = include_template('error.php', ['error' => $error]);
-    }
+$result = mysqli_query($link, $sql);
+if ($result) {
+    $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $content = include_template('index.php', [
+        'categories' => $categories,
+        'lots' => $lots
+    ]);
+} else {
+    $error = mysqli_error($link);
+    $content = include_template('error.php', ['error' => $error]);
 }
 
 $layout = include_template('layout.php', [

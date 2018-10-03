@@ -15,7 +15,7 @@
           <div class="lot-item__image">
             <img src="<?=$lot['img'] ?>" width="730" height="548" alt="<?=htmlspecialchars($lot['name']) ?>">
           </div>
-          <p class="lot-item__category">Категория: <span><?=$lot['title'] ?></span></p>
+          <p class="lot-item__category">Категория: <span><?=$lot['category_title'] ?></span></p>
           <p class="lot-item__description"><?=htmlspecialchars($lot['description']) ?></p>
         </div>
         <div class="lot-item__right">

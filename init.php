@@ -9,4 +9,8 @@ $content = '';
 
 require_once 'functions.php';
 $link = mysqli_connect("localhost", "root", "root", "221665-yeticave");
+if (!$link) {
+    $error = mysqli_connect_error();
+    show_error($error);
+}
 ?>

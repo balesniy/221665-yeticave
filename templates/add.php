@@ -21,7 +21,7 @@
           <select id="category" name="category" required>
             <option disabled>Выберите категорию</option>
             <?php foreach($categories as $value):?>
-                <option <?=isset($lot['category'])&&$lot['category'] == $value['title']? 'selected' : '' ?>><?=$value['title'] ?></option>
+                <option value="<?=$value['id'] ?>" <?=isset($lot['category'])&&$lot['category'] == $value['title']? 'selected' : '' ?>><?=$value['title'] ?></option>
             <?php endforeach; ?>
           </select>
           <span class="form__error">Выберите категорию</span>

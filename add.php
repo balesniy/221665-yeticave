@@ -19,6 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];
     $dict = ['title' => 'Название', 'description' => 'Описание', 'file' => 'Фото'];
     $numbers = ['lot-rate', 'lot-step'];
+    $dates = ['lot-date'];
+    $maxLength = [
+        'lot-name' => 128
+    ];
     
     foreach ($required as $key) {
 		if (empty($_POST[$key])) {
@@ -31,29 +35,70 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[$key] = 'Введите число';
 		}
     }
+
+    foreach ($numbers as $key) {
+		if (empty($errors[$key]) && intval($_POST[$key]) <= 0) {
+            $errors[$key] = 'Введите целое положительное число';
+		}
+    }
+
+    foreach ($dates as $key) {
+		if (!empty($_POST[$key]) && !strtotime($_POST[$key])) {
+            $errors[$key] = 'Введите дату';
+		}
+    }
+
+    foreach ($dates as $key) {
+		if (empty($errors[$key]) && date_diff(date_create($_POST[$key]), date_create('now'))->days < 1) {
+            $errors[$key] = 'Введите завтрашнюю дату';
+		}
+    }
+
+    foreach ($maxLength as $key => $value) {
+		if (!empty($_POST[$key]) && strlen($_POST[$key]) > $value) {
+            $errors[$key] = "Введите не больше $value знаков";
+		}
+    }
     
-    // print_r($_FILES['gif_img']);
+    // print_r(var_dump($_FILES['gif_img']));
 
-    // if (isset($_FILES['gif_img']['name'])) {
-	// 	$tmp_name = $_FILES['gif_img']['tmp_name'];
-	// 	$path = $_FILES['gif_img']['name'];
+    if (is_uploaded_file($_FILES['gif_img']['tmp_name'])) {
+		$tmp_name = $_FILES['gif_img']['tmp_name'];
+		$path = $_FILES['gif_img']['name'];
 
-	// 	$finfo = finfo_open(FILEINFO_MIME_TYPE);
-    //     $file_type = finfo_file($finfo, $tmp_name);
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
         
-    //     if ($file_type !== "image/gif") {
-	// 		$errors['file'] = 'Загрузите картинку в формате GIF';
-	// 	} else {
-	// 		move_uploaded_file($tmp_name, 'uploads/' . $path);
-    //         $gif['path'] = $path;
+        if ($file_type !== "image/gif") {
+			$errors['file'] = 'Загрузите картинку в формате GIF';
+		} else {
+			move_uploaded_file($tmp_name, 'uploads/' . $path);
+            $gif['path'] = $path;
             
-    //         // $filename = uniqid() . '.gif';
-    //         // $gif['path'] = $filename;
-    //         // move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
-	// 	}
-	// } else {
-	// 	$errors['file'] = 'Вы не загрузили файл';
-    // }
+            // $filename = uniqid() . '.gif';
+            // $gif['path'] = $filename;
+            // move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
+		}
+	} else {
+		$errors['file'] = 'Вы не загрузили файл';
+    }
+
+    if (isset($_POST['category'])) {
+        $id = intval($_POST['category']);
+        if (!$id) {
+            $errors['category'] = 'Выберите категорию';
+        } else {
+            $sql = "SELECT * FROM categories WHERE id=$id";
+            $result = mysqli_query($link, $sql);
+            if (!$result){
+                $error = mysqli_error($link);
+                show_error($error);
+            }
+            if (!mysqli_num_rows($result)) {
+                $errors['category'] = 'Выберите категорию';
+            }
+        }
+    }
     
     if (count($errors)) {
 		$page_content = include_template('add.php', [
@@ -63,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'dict' => $dict
             ]);
 	} else {
-        // $sql = 'INSERT INTO gifs (dt_add, category_id, user_id, title, description, path) VALUES (NOW(), ?, 1, ?, ?, ?)';
+        
         $sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, 'img/lot-1.jpg', 1, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, [
             $lot['lot-name'], $lot['message'], $lot['category'], $lot['lot-rate'], $lot['lot-step'], $lot['lot-date']

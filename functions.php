@@ -94,9 +94,8 @@ function validate_img($name){
         }
         return ['file' => 'Загрузите картинку в формате PNG или JPG'];
 
-	} else {
-		return ['file' => 'Вы не загрузили файл'];
-    }
+	}
+	return ['file' => 'Вы не загрузили файл'];
 }
 
 

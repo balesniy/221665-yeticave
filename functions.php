@@ -66,6 +66,7 @@ function validate_number($number, $key){
 }
 
 function validate_category($id, $link){
+    $id = intval($id);
     if (!$id) {
         return ['category' => 'Выберите категорию'];
     } else {

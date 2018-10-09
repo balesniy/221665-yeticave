@@ -50,25 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     // print_r(var_dump($_FILES['gif_img']));
-
-    if (is_uploaded_file($_FILES['gif_img']['tmp_name'])) {
-		$tmp_name = $_FILES['gif_img']['tmp_name'];
-		$path = $_FILES['gif_img']['name'];
-
-		$finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
-        
-        if ($file_type !== "image/gif") {
-			$errors['file'] = 'Загрузите картинку в формате GIF';
-        } 
-
-	} else {
-		$errors['file'] = 'Вы не загрузили файл';
-    }
-
-    if (isset($_POST['category'])) {
-        $errors = array_merge($errors, validate_category($_POST[$key], $key));
-    }
+    
+    $errors = array_merge($errors, validate_category($_POST[$key], $link), validate_img('gif_img'));
     
     if (!count($errors)) {
         $filename = uniqid() . '.gif';
@@ -79,9 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
         $res = mysqli_stmt_execute($stmt);
 
-        $lot_id = mysqli_insert_id($link);
+        if ($res) {
+            $lot_id = mysqli_insert_id($link);
 
-        header("Location: lot.php?id=" . $lot_id);
+            header("Location: lot.php?id=" . $lot_id);
+        }
+
+        
 
         // if ($res) {
         //     $lot_id = mysqli_insert_id($link);

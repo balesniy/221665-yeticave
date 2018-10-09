@@ -42,4 +42,105 @@ function get_time($finish_time){
     $interval = date_diff($lot_finish_time, $current_time);
     return $interval->format('%a дн. %H:%I');
 }
+
+function validate_date($date, $key){ 
+    if (!strtotime($date)) {
+        return [$key => 'Введите дату'];
+    }
+    if (date_diff(date_create($date), date_create('now'))->days < 1) {
+        return [$key => 'Введите завтрашнюю дату'];
+    }
+
+    return [];
+}
+
+function validate_number($number, $key){ 
+    if (!is_numeric($number)) {
+        return [$key => 'Введите число'];
+    }
+    if (intval($number) <= 0) {
+        return [$key => 'Введите целое положительное число'];
+    }
+
+    return [];
+}
+
+function validate_category($id, $link){
+    $id = intval($id);
+    if (!$id) {
+        return ['category' => 'Выберите категорию'];
+    } else {
+        $sql = "SELECT * FROM categories WHERE id=$id";
+        $result = mysqli_query($link, $sql);
+        if (!$result){
+            // $error = mysqli_error($link);
+            // show_error($error);
+            return ['category' => 'Ошибка sql'];
+        }
+        if (!mysqli_num_rows($result)) {
+            return ['category' => 'Выберите категорию'];
+        }
+    }
+    return [];
+}
+
+function validate_img($name){
+    if (is_uploaded_file($_FILES[$name]['tmp_name'])) {
+		$tmp_name = $_FILES[$name]['tmp_name'];
+        $file_type = mime_content_type($tmp_name);
+        
+        if ($file_type === "image/png" || $file_type === "image/jpeg") {
+            return [];
+        }
+        return ['file' => 'Загрузите картинку в формате PNG или JPG'];
+
+	}
+	return ['file' => 'Вы не загрузили файл'];
+}
+
+
+
+/**
+ * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
+ *
+ * @param $link mysqli Ресурс соединения
+ * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param array $data Данные для вставки на место плейсхолдеров
+ *
+ * @return mysqli_stmt Подготовленное выражение
+ */
+function db_get_prepare_stmt($link, $sql, $data = []) {
+    $stmt = mysqli_prepare($link, $sql);
+
+    if ($data) {
+        $types = '';
+        $stmt_data = [];
+
+        foreach ($data as $value) {
+            $type = null;
+
+            if (is_int($value)) {
+                $type = 'i';
+            }
+            else if (is_string($value)) {
+                $type = 's';
+            }
+            else if (is_double($value)) {
+                $type = 'd';
+            }
+
+            if ($type) {
+                $types .= $type;
+                $stmt_data[] = $value;
+            }
+        }
+
+        $values = array_merge([$stmt, $types], $stmt_data);
+
+        $func = 'mysqli_stmt_bind_param';
+        $func(...$values);
+    }
+
+    return $stmt;
+}
 ?>

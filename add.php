@@ -29,33 +29,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[$key] = 'Это поле надо заполнить';
 		}
     }
-    
-    foreach ($numbers as $key) {
-		if (!empty($_POST[$key]) && !is_numeric($_POST[$key])) {
-            $errors[$key] = 'Введите число';
-		}
-    }
 
     foreach ($numbers as $key) {
-		if (empty($errors[$key]) && intval($_POST[$key]) <= 0) {
-            $errors[$key] = 'Введите целое положительное число';
+		if (empty($errors[$key])) {
+            $errors = array_merge($errors, validate_number($_POST[$key], $key));
 		}
     }
 
     foreach ($dates as $key) {
-		if (!empty($_POST[$key]) && !strtotime($_POST[$key])) {
-            $errors[$key] = 'Введите дату';
-		}
-    }
-
-    foreach ($dates as $key) {
-		if (empty($errors[$key]) && date_diff(date_create($_POST[$key]), date_create('now'))->days < 1) {
-            $errors[$key] = 'Введите завтрашнюю дату';
+		if (empty($errors[$key])) {
+            $errors = array_merge($errors, validate_date($_POST[$key], $key));
 		}
     }
 
     foreach ($maxLength as $key => $value) {
-		if (!empty($_POST[$key]) && strlen($_POST[$key]) > $value) {
+		if (empty($errors[$key]) && strlen($_POST[$key]) > $value) {
             $errors[$key] = "Введите не больше $value знаков";
 		}
     }
@@ -84,20 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (isset($_POST['category'])) {
-        $id = intval($_POST['category']);
-        if (!$id) {
-            $errors['category'] = 'Выберите категорию';
-        } else {
-            $sql = "SELECT * FROM categories WHERE id=$id";
-            $result = mysqli_query($link, $sql);
-            if (!$result){
-                $error = mysqli_error($link);
-                show_error($error);
-            }
-            if (!mysqli_num_rows($result)) {
-                $errors['category'] = 'Выберите категорию';
-            }
-        }
+        $errors = array_merge($errors, validate_category($_POST[$key], $key));
     }
     
     if (count($errors)) {

@@ -43,6 +43,46 @@ function get_time($finish_time){
     return $interval->format('%a дн. %H:%I');
 }
 
+function validate_date($date, $key){ 
+    if (!strtotime($date)) {
+        return [$key => 'Введите дату'];
+    }
+    if (date_diff(date_create($date), date_create('now'))->days < 1) {
+        return [$key => 'Введите завтрашнюю дату'];
+    }
+
+    return [];
+}
+
+function validate_number($number, $key){ 
+    if (!is_numeric($number)) {
+        return [$key => 'Введите число'];
+    }
+    if (intval($number) <= 0) {
+        return [$key => 'Введите целое положительное число'];
+    }
+
+    return [];
+}
+
+function validate_category($id, $link){
+    if (!$id) {
+        return ['category' => 'Выберите категорию'];
+    } else {
+        $sql = "SELECT * FROM categories WHERE id=$id";
+        $result = mysqli_query($link, $sql);
+        if (!$result){
+            // $error = mysqli_error($link);
+            // show_error($error);
+            return ['category' => 'Ошибка sql'];
+        }
+        if (!mysqli_num_rows($result)) {
+            return ['category' => 'Выберите категорию'];
+        }
+    }
+    return [];
+}
+
 /**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *

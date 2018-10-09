@@ -60,14 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if ($file_type !== "image/gif") {
 			$errors['file'] = 'Загрузите картинку в формате GIF';
-		} else {
-			move_uploaded_file($tmp_name, 'uploads/' . $path);
-            $gif['path'] = $path;
-            
-            // $filename = uniqid() . '.gif';
-            // $gif['path'] = $filename;
-            // move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
-		}
+        } 
+
 	} else {
 		$errors['file'] = 'Вы не загрузили файл';
     }
@@ -77,7 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     if (!count($errors)) {
-		$sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, 'img/lot-1.jpg', 1, ?)";
+        $filename = uniqid() . '.gif';
+        move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
+		$sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, $filename, 1, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, [
             $lot['lot-name'], $lot['message'], $lot['category'], $lot['lot-rate'], $lot['lot-step'], $lot['lot-date']
         ]);

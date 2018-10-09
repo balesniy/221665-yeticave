@@ -84,42 +84,15 @@ function validate_category($id, $link){
     return [];
 }
 
-function upload_img($name){
-    if (is_uploaded_file($_FILES[$name]['tmp_name'])) {
-		$tmp_name = $_FILES[$name]['tmp_name'];
-		$path = $_FILES[$name]['name'];
-
-		$finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
-        
-        if ($file_type !== "image/gif") {
-            return ['error' => 'Загрузите картинку в формате GIF'];
-		} 
-        move_uploaded_file($tmp_name, 'uploads/' . $path);
-        return ['path' => $path];
-        
-        // $filename = uniqid() . '.gif';
-        // $gif['path'] = $filename;
-        // move_uploaded_file($_FILES[$name]['tmp_name'], 'uploads/' . $filename);
-		
-	} else {
-		return ['error' => 'Загрузите картинку в формате GIF'];
-    }
-}
-
 function validate_img($name){
     if (is_uploaded_file($_FILES[$name]['tmp_name'])) {
 		$tmp_name = $_FILES[$name]['tmp_name'];
-		$path = $_FILES[$name]['name'];
-
-		$finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
+        $file_type = mime_content_type($tmp_name);
         
-        if ($file_type !== "image/gif") {
-			return ['file' => 'Загрузите картинку в формате GIF'];
+        if ($file_type === "image/png" || $file_type === "image/jpeg") {
+            return [];
         }
-        
-        return [];
+        return ['file' => 'Загрузите картинку в формате PNG или JPG'];
 
 	} else {
 		return ['file' => 'Вы не загрузили файл'];

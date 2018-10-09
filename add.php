@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // print_r(var_dump($_FILES['gif_img']));
     
-    $errors = array_merge($errors, validate_category($_POST[$key], $link), validate_img('gif_img'));
+    $errors = array_merge($errors, validate_category($_POST['category'], $link), validate_img('gif_img'));
     
     if (!count($errors)) {
         $filename = uniqid() . '.gif';

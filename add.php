@@ -12,6 +12,7 @@ if ($result) {
 }
 
 $errors = [];
+$lot = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
@@ -75,41 +76,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = array_merge($errors, validate_category($_POST[$key], $key));
     }
     
-    if (count($errors)) {
-		$page_content = include_template('add.php', [
-            'lot' => $lot,
-            'categories' => $categories,
-            'errors' => $errors,
-            'dict' => $dict
-            ]);
-	} else {
-        
-        $sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, 'img/lot-1.jpg', 1, ?)";
+    if (!count($errors)) {
+		$sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, 'img/lot-1.jpg', 1, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, [
             $lot['lot-name'], $lot['message'], $lot['category'], $lot['lot-rate'], $lot['lot-step'], $lot['lot-date']
         ]);
         $res = mysqli_stmt_execute($stmt);
 
-        if ($res) {
-            $lot_id = mysqli_insert_id($link);
+        $lot_id = mysqli_insert_id($link);
 
-            header("Location: lot.php?id=" . $lot_id);
+        header("Location: lot.php?id=" . $lot_id);
 
-            // $page_content = include_template('view.php', ['gif' => $gif]);
+        // if ($res) {
+        //     $lot_id = mysqli_insert_id($link);
 
-        }  else {
-            $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
-        }
+        //     header("Location: lot.php?id=" . $lot_id);
 
+        //     // $page_content = include_template('view.php', ['gif' => $gif]);
+
+        // }  else {
+        //     $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
+        // }
 	}
 
-} else {
-	$page_content = include_template('add.php', [
-        'categories' => $categories,
-        'errors' => $errors,
-        'lot' => []
-    ]);
-}
+} 
+
+$page_content = include_template('add.php', [
+    'categories' => $categories,
+    'errors' => $errors,
+    'lot' => $lot
+]);
 
 $layout_content = include_template('layout.php', [
 	'content'    => $page_content,

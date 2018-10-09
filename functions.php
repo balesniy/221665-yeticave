@@ -95,7 +95,7 @@ function upload_img($name){
             return ['error' => 'Загрузите картинку в формате GIF'];
 		} 
         move_uploaded_file($tmp_name, 'uploads/' . $path);
-        return $path;
+        return ['path' => $path];
         
         // $filename = uniqid() . '.gif';
         // $gif['path'] = $filename;
@@ -105,6 +105,27 @@ function upload_img($name){
 		return ['error' => 'Загрузите картинку в формате GIF'];
     }
 }
+
+function validate_img($name){
+    if (is_uploaded_file($_FILES[$name]['tmp_name'])) {
+		$tmp_name = $_FILES[$name]['tmp_name'];
+		$path = $_FILES[$name]['name'];
+
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+        
+        if ($file_type !== "image/gif") {
+			return ['file' => 'Загрузите картинку в формате GIF'];
+        }
+        
+        return [];
+
+	} else {
+		return ['file' => 'Вы не загрузили файл'];
+    }
+}
+
+
 
 /**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных

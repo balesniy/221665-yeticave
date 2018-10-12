@@ -84,6 +84,25 @@ function validate_category($id, $link){
     return [];
 }
 
+function validate_email($email, $link){
+    $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+    if (!$email) {
+        return ['email' => 'Введите корректный email'];
+    } else {
+        $sql = "SELECT * FROM users WHERE email=$email";
+        $result = mysqli_query($link, $sql);
+        if (!$result){
+            // $error = mysqli_error($link);
+            // show_error($error);
+            return ['email' => 'Ошибка sql'];
+        }
+        if (mysqli_num_rows($result)) {
+            return ['email' => 'email занят'];
+        }
+    }
+    return [];
+}
+
 function validate_img($name){
     if (is_uploaded_file($_FILES[$name]['tmp_name'])) {
 		$tmp_name = $_FILES[$name]['tmp_name'];

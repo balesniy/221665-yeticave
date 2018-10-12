@@ -1,5 +1,5 @@
 <?php
-$title = 'Новый лот';
+$title = 'Регистрация';
 require_once 'init.php';
 
 $sql = 'SELECT `title`, `promo_class`, `id` FROM categories';
@@ -12,34 +12,22 @@ if ($result) {
 }
 
 $errors = [];
-$lot = [];
+$user = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $lot = $_POST;
 
-    $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];
-    $dict = ['title' => 'Название', 'description' => 'Описание', 'file' => 'Фото'];
-    $numbers = ['lot-rate', 'lot-step'];
-    $dates = ['lot-date'];
+    $user = $_POST;
+    $required = ['email', 'password', 'name', 'message'];
+
     $maxLength = [
-        'lot-name' => 128
+        'name' => 64,
+        'email' => 128,
+        'password' => 64
     ];
-    
+
     foreach ($required as $key) {
 		if (empty($_POST[$key])) {
             $errors[$key] = 'Это поле надо заполнить';
-		}
-    }
-
-    foreach ($numbers as $key) {
-		if (empty($errors[$key])) {
-            $errors = array_merge($errors, validate_number($_POST[$key], $key));
-		}
-    }
-
-    foreach ($dates as $key) {
-		if (empty($errors[$key])) {
-            $errors = array_merge($errors, validate_date($_POST[$key], $key));
 		}
     }
 
@@ -48,45 +36,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[$key] = "Введите не больше $value знаков";
 		}
     }
-    
-    $errors = array_merge($errors, validate_category($_POST['category'], $link), validate_img('gif_img'));
-    
+
+    $errors = array_merge($errors, validate_email($_POST['email'], $link), validate_img('gif_img'));
+
     if (!count($errors)) {
         $type = mime_content_type($_FILES['gif_img']['tmp_name']) === "image/png" ? '.png' : '.jpg';
         $filename = uniqid() . $type;
         move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
-		$sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, $filename, 1, ?)";
+
+		$sql = "INSERT INTO users (name, email, password, avatar, contact) VALUES(?, ?, ?, $filename, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, [
-            $lot['lot-name'], $lot['message'], $lot['category'], $lot['lot-rate'], $lot['lot-step'], $lot['lot-date']
+            $user['name'], $user['email'], password_hash($user['password'], PASSWORD_DEFAULT), $user['message']
         ]);
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {
-            $lot_id = mysqli_insert_id($link);
+            // $user_id = mysqli_insert_id($link);
 
-            header("Location: lot.php?id=" . $lot_id);
+            header("Location: login.php");
+            exit();
         }
 
-        
-
         // if ($res) {
-        //     $lot_id = mysqli_insert_id($link);
-
-        //     header("Location: lot.php?id=" . $lot_id);
-
-        //     // $page_content = include_template('view.php', ['gif' => $gif]);
-
+        //    $page_content = include_template('view.php', ['gif' => $gif]);
         // }  else {
         //     $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
         // }
 	}
+}
 
-} 
-
-$page_content = include_template('add.php', [
+$page_content = include_template('sign-up.php', [
     'categories' => $categories,
     'errors' => $errors,
-    'lot' => $lot
+    'user' => $user
 ]);
 
 $layout_content = include_template('layout.php', [

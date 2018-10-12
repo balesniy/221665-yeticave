@@ -54,7 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = array_merge($errors, validate_category($_POST['category'], $link), validate_img('gif_img'));
     
     if (!count($errors)) {
-        $filename = uniqid() . '.gif';
+        $type = mime_content_type($_FILES['gif_img']['tmp_name']) === "image/png" ? 'png' : 'jpg';
+        $filename = uniqid() . $type;
         move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
 		$sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, $filename, 1, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, [

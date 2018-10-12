@@ -36,25 +36,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
     }
 
-    // $errors = array_merge($errors, validate_email($_POST['email'], $link));
+    $errors = array_merge($errors, validate_password($_POST['email'], $_POST['password'], $link));
 
     if (!count($errors)) {
-        $type = mime_content_type($_FILES['gif_img']['tmp_name']) === "image/png" ? '.png' : '.jpg';
-        $filename = uniqid() . $type;
-        move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
+        // $type = mime_content_type($_FILES['gif_img']['tmp_name']) === "image/png" ? '.png' : '.jpg';
+        // $filename = uniqid() . $type;
+        // move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
 
-		$sql = "INSERT INTO users (name, email, password, avatar, contact) VALUES(?, ?, ?, $filename, ?)";
-        $stmt = db_get_prepare_stmt($link, $sql, [
-            $user['name'], $user['email'], password_hash($user['password'], PASSWORD_DEFAULT), $user['message']
-        ]);
-        $res = mysqli_stmt_execute($stmt);
+		// $sql = "INSERT INTO users (name, email, password, avatar, contact) VALUES(?, ?, ?, $filename, ?)";
+        // $stmt = db_get_prepare_stmt($link, $sql, [
+        //     $user['name'], $user['email'], password_hash($user['password'], PASSWORD_DEFAULT), $user['message']
+        // ]);
+        // $res = mysqli_stmt_execute($stmt);
 
-        if ($res) {
-            // $user_id = mysqli_insert_id($link);
+        // if ($res) {
+        //     // $user_id = mysqli_insert_id($link);
 
-            header("Location: login.php");
-            exit();
-        }
+        //     header("Location: login.php");
+        //     exit();
+        // }
 
         // if ($res) {
         //    $page_content = include_template('view.php', ['gif' => $gif]);

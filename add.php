@@ -6,10 +6,17 @@ $errors = [];
 $lot = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    if (empty($user)) {
+        header("HTTP/1.0 403 Forbidden");
+        print("403 Анонимный пользователь не может добавлять лот");
+        exit();
+    }
+
+
     $lot = $_POST;
 
     $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];
-    $dict = ['title' => 'Название', 'description' => 'Описание', 'file' => 'Фото'];
     $numbers = ['lot-rate', 'lot-step'];
     $dates = ['lot-date'];
     $maxLength = [

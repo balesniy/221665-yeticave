@@ -58,18 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: lot.php?id=" . $lot_id);
         }
 
-        
-
-        // if ($res) {
-        //     $lot_id = mysqli_insert_id($link);
-
-        //     header("Location: lot.php?id=" . $lot_id);
-
-        //     // $page_content = include_template('view.php', ['gif' => $gif]);
-
-        // }  else {
-        //     $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
-        // }
 	}
 
 } 

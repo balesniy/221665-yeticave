@@ -47,17 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {
-            // $user_id = mysqli_insert_id($link);
 
             header("Location: login.php");
             exit();
         }
-
-        // if ($res) {
-        //    $page_content = include_template('view.php', ['gif' => $gif]);
-        // }  else {
-        //     $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
-        // }
 	}
 }
 

@@ -1,12 +1,10 @@
 <?php
-// $is_auth = (bool) rand(0, 1);
+
 date_default_timezone_set('Europe/Moscow');
-// $user_name = 'Алексей'; // укажите здесь ваше имя
 
 session_start();
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : [];
 
-$user_avatar = 'img/user.jpg';
 $categories = [];
 $content = '';
 

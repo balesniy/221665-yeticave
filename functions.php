@@ -73,8 +73,7 @@ function validate_category($id, $link){
         $sql = "SELECT * FROM categories WHERE id=$id";
         $result = mysqli_query($link, $sql);
         if (!$result){
-            // $error = mysqli_error($link);
-            // show_error($error);
+           
             return ['category' => 'Ошибка sql'];
         }
         if (!mysqli_num_rows($result)) {
@@ -93,8 +92,7 @@ function validate_email($email, $link){
         $sql = "SELECT * FROM users WHERE email='$email'";
         $result = mysqli_query($link, $sql);
         if (!$result){
-            // $error = mysqli_error($link);
-            // show_error($error);
+
             return ['email' => 'Ошибка sql'];
         }
         if (mysqli_num_rows($result)) {

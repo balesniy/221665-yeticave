@@ -30,7 +30,7 @@ if($lot['user_id'] == $user_id){
 }
 
 
-$sql = "SELECT * FROM bets JOIN users ON user_id=users.id WHERE lot_id=$id ORDER BY reg_date DESC";
+$sql = "SELECT * FROM bets JOIN users ON user_id=users.id WHERE lot_id=$id ORDER BY bets.reg_date DESC";
 
 $result = mysqli_query($link, $sql);
 if (!$result){
@@ -40,11 +40,10 @@ if (!$result){
 
 $bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-$user_id = $user['id'];
 
         $sql = "SELECT *
         FROM bets
-        WHERE lots_id=$id AND user_id=$user_id";
+        WHERE lot_id=$id AND user_id=$user_id";
 
         $result = mysqli_query($link, $sql);
         if (!$result){

@@ -3,12 +3,12 @@
 require_once 'init.php';
 
 $errors = [];
-$required = ['cost', 'id'];
+$required = ['cost'];
 $numbers = ['cost'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user))) {
 
-    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
         $sql = "SELECT *
         FROM lots
@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user))) {
             show_error($error);
         }
         if (!mysqli_num_rows($result)) {
-            http_response_code(404);
-            show_error('Лот с этим идентификатором не найден');
+            header('Location: index.php');
+            exit();
         }
         $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user))) {
 
         $sql = "SELECT *
         FROM bets
-        WHERE lots_id=$id AND user_id=$user_id";
+        WHERE lot_id=$id AND user_id=$user_id";
 
         $result = mysqli_query($link, $sql);
         if (!$result){
@@ -65,14 +65,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user))) {
     if (!count($errors)) {
         $sql = "INSERT INTO bets (amount, user_id, lot_id) VALUES(?, ?, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, [
-            $_POST['cost'], $user['id'], $_POST['id']
+            $_POST['cost'], $user['id'], $id
         ]);
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {
 
-            header('Location: lot.php?id='.isset($_POST['id']) ? intval($_POST['id']) : 0);
+            header('Location: lot.php?id='.$id);
         }
+    } else {
+        show_error($errors);
     }
     
 } else {

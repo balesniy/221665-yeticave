@@ -35,7 +35,8 @@ $bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
 $content = include_template('lot.php', [
     'categories' => $categories,
     'lot' => $lot,
-    'bets' => $bets
+    'bets' => $bets,
+    'user' => $user
 ]);
 
 $layout = include_template('layout.php', [

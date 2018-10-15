@@ -111,8 +111,6 @@ function validate_password($email, $password, $link){
     $sql = "SELECT * FROM users WHERE email='$email'";
     $result = mysqli_query($link, $sql);
     if (!$result){
-        // $error = mysqli_error($link);
-        // show_error($error);
         return ['email' => 'Ошибка sql'];
     }
     if (!mysqli_num_rows($result)) {

@@ -12,7 +12,7 @@
     <h2>Вход</h2>
     <div class="form__item <?=isset($errors['email']) ? 'form__item--invalid' : '' ?>"> <!-- form__item--invalid -->
     <label for="email">E-mail*</label>
-    <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=isset($user['email']) ? $user['email'] : '' ?>">
+    <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=isset($login['email']) ? $login['email'] : '' ?>">
     <span class="form__error">Введите e-mail</span>
     </div>
     <div class="form__item form__item--last <?=isset($errors['password']) ? 'form__item--invalid' : '' ?>">

@@ -22,6 +22,14 @@ if (!mysqli_num_rows($result)) {
 }
 $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
+$user_id = $user['id'];
+
+if($lot['user_id'] == $user_id){
+    
+    $user['error'] = 'это ваш лот';
+}
+
+
 $sql = "SELECT * FROM bets JOIN users ON user_id=users.id WHERE lot_id=$id ORDER BY reg_date DESC";
 
 $result = mysqli_query($link, $sql);

@@ -16,4 +16,16 @@ if (!$link) {
     $error = mysqli_connect_error();
     show_error($error);
 }
+
+
+$sql = 'SELECT `title`, `promo_class`, `id` FROM categories';
+$result = mysqli_query($link, $sql);
+if ($result) {
+    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+} else {
+    $error = mysqli_error($link);
+    show_error($error);
+}
+
+
 ?>

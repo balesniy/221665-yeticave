@@ -3,15 +3,6 @@ $title = 'Лот';
 require_once 'init.php';
  
 
-$sql = 'SELECT `title`, `promo_class` FROM categories';
-$result = mysqli_query($link, $sql);
-if ($result) {
-    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-} else {
-    $error = mysqli_error($link);
-    show_error($error);
-}
-
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 $sql = "SELECT *, categories.title as category_title,
@@ -39,9 +30,9 @@ $layout = include_template('layout.php', [
     'content' => $content,
     'categories' => $categories,
     'title' => $title,
-    'user_name' => $user_name,
-    'is_auth' => $is_auth,
-    'user_avatar' => $user_avatar
+    'user_name' => $user['name'],
+    'is_auth' => count($user),
+    'user_avatar' => $user['avatar']
 ]);
 
 print($layout);

@@ -2,15 +2,6 @@
 $title = 'Новый лот';
 require_once 'init.php';
 
-$sql = 'SELECT `title`, `promo_class`, `id` FROM categories';
-$result = mysqli_query($link, $sql);
-if ($result) {
-    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-} else {
-    $error = mysqli_error($link);
-    show_error($error);
-}
-
 $errors = [];
 $lot = [];
 
@@ -93,9 +84,9 @@ $layout_content = include_template('layout.php', [
 	'content'    => $page_content,
 	'categories' => $categories,
 	'title'      => $title,
-    'user_name' => $user_name,
-    'is_auth' => $is_auth,
-    'user_avatar' => $user_avatar
+    'user_name' => $user['name'],
+    'is_auth' => count($user),
+    'user_avatar' => $user['avatar']
 ]);
 
 print($layout_content);

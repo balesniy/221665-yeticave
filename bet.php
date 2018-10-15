@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user))) {
 
 
     foreach ($required as $key) {
-		if (empty($_POST[$key])) {
+		if (empty(trim($_POST[$key]))) {
             $errors[$key] = 'Это поле надо заполнить';
 		}
     }

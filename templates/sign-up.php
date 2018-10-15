@@ -13,7 +13,7 @@
       <div class="form__item <?=isset($errors['email']) ? 'form__item--invalid' : '' ?>">
         <label for="email">E-mail*</label>
         <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=isset($user['email']) ? $user['email'] : '' ?>">
-        <span class="form__error">Введите e-mail</span>
+        <span class="form__error"><?=!empty($errors['email']) ? $errors['email'] : " "?></span>
       </div>
       <div class="form__item <?=isset($errors['password']) ? 'form__item--invalid' : '' ?>">
         <label for="password">Пароль*</label>
@@ -49,5 +49,5 @@
       </div>
       <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
       <button type="submit" class="button">Зарегистрироваться</button>
-      <a class="text-link" href="#">Уже есть аккаунт</a>
+      <a class="text-link" href="login.php">Уже есть аккаунт</a>
     </form>

@@ -38,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!count($errors)) {
         $type = mime_content_type($_FILES['gif_img']['tmp_name']) === "image/png" ? '.png' : '.jpg';
         $filename = uniqid() . $type;
-        move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
+        move_uploaded_file($_FILES['gif_img']['tmp_name'], 'img/' . $filename);
 
-		$sql = "INSERT INTO users (name, email, password, avatar, contact) VALUES(?, ?, ?, $filename, ?)";
+		$sql = "INSERT INTO users (name, email, password, avatar, contact) VALUES(?, ?, ?, ?, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, [
-            $user['name'], $user['email'], password_hash($user['password'], PASSWORD_DEFAULT), $user['message']
+            $user['name'], $user['email'], password_hash($user['password'], PASSWORD_DEFAULT), $filename, $user['message']
         ]);
         $res = mysqli_stmt_execute($stmt);
 

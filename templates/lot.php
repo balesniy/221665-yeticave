@@ -32,13 +32,13 @@
                 Мин. ставка <span><?=price_format($lot['price']+$lot['amount_step']) ?></span>
               </div>
             </div>
-            <!-- <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post">
+            <form class="lot-item__form" action="bet.php?id=<?=$lot['id'] ?>" method="post">
               <p class="lot-item__form-item">
                 <label for="cost">Ваша ставка</label>
                 <input id="cost" type="number" name="cost" placeholder="12 000">
               </p>
               <button type="submit" class="button">Сделать ставку</button>
-            </form> -->
+            </form>
           </div>
           <!-- <div class="history">
             <h3>История ставок (<span>10</span>)</h3>

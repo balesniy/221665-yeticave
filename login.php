@@ -2,6 +2,11 @@
 $title = 'Вход';
 require_once 'init.php';
 
+if (!empty($user)) {
+    header("Location: index.php");
+    exit();
+}
+
 $errors = [];
 $login = [];
 

@@ -32,6 +32,22 @@ if (!$result){
 
 $bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+$user_id = $user['id'];
+
+        $sql = "SELECT *
+        FROM bets
+        WHERE lots_id=$id AND user_id=$user_id";
+
+        $result = mysqli_query($link, $sql);
+        if (!$result){
+            $error = mysqli_error($link);
+            show_error($error);
+        }
+        if (mysqli_num_rows($result)) {
+            $user['error'] = 'ставка уже сделана';
+        }
+
+
 $content = include_template('lot.php', [
     'categories' => $categories,
     'lot' => $lot,

@@ -32,7 +32,7 @@
                 Мин. ставка <span><?=price_format($lot['price']+$lot['amount_step']) ?></span>
               </div>
             </div>
-            <?php if(!empty($user)): ?>
+            <?php if(!empty($user) && !isset($user['error'])): ?>
             <form class="lot-item__form" action="bet.php?id=<?=$lot['id'] ?>" method="post">
               <p class="lot-item__form-item">
                 <label for="cost">Ваша ставка</label>

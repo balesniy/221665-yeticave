@@ -89,6 +89,7 @@ function validate_email($email, $link){
     if (!$email) {
         return ['email' => 'Введите корректный email'];
     } else {
+        $email = mysqli_real_escape_string($link, $email);
         $sql = "SELECT * FROM users WHERE email='$email'";
         $result = mysqli_query($link, $sql);
         if (!$result){
@@ -107,12 +108,11 @@ function validate_password($email, $password, $link){
     $email = filter_var($email, FILTER_VALIDATE_EMAIL);
     if (!$email) {
         return ['email' => 'Введите корректный email'];
-    } 
+    }
+    $email = mysqli_real_escape_string($link, $email); 
     $sql = "SELECT * FROM users WHERE email='$email'";
     $result = mysqli_query($link, $sql);
     if (!$result){
-        // $error = mysqli_error($link);
-        // show_error($error);
         return ['email' => 'Ошибка sql'];
     }
     if (!mysqli_num_rows($result)) {

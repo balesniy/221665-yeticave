@@ -2,21 +2,12 @@
 $title = 'Вход';
 require_once 'init.php';
 
-$sql = 'SELECT `title`, `promo_class`, `id` FROM categories';
-$result = mysqli_query($link, $sql);
-if ($result) {
-    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-} else {
-    $error = mysqli_error($link);
-    show_error($error);
-}
-
 $errors = [];
-$user = [];
+$login = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $user = $_POST;
+    $login = $_POST;
     $required = ['email', 'password'];
 
     $maxLength = [
@@ -36,47 +27,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
     }
 
-    $errors = array_merge($errors, validate_password($_POST['email'], $_POST['password'], $link));
+    $valid_user = validate_password($_POST['email'], $_POST['password'], $link);
 
+    if(!isset($valid_user['user'])){
+        $errors = array_merge($errors, $valid_user);
+    }
+    
     if (!count($errors)) {
-        // $type = mime_content_type($_FILES['gif_img']['tmp_name']) === "image/png" ? '.png' : '.jpg';
-        // $filename = uniqid() . $type;
-        // move_uploaded_file($_FILES['gif_img']['tmp_name'], 'uploads/' . $filename);
+        session_start();
+        $_SESSION['user'] = $valid_user['user'];
+        header("Location: index.php");
 
-		// $sql = "INSERT INTO users (name, email, password, avatar, contact) VALUES(?, ?, ?, $filename, ?)";
-        // $stmt = db_get_prepare_stmt($link, $sql, [
-        //     $user['name'], $user['email'], password_hash($user['password'], PASSWORD_DEFAULT), $user['message']
-        // ]);
-        // $res = mysqli_stmt_execute($stmt);
-
-        // if ($res) {
-        //     // $user_id = mysqli_insert_id($link);
-
-        //     header("Location: login.php");
-        //     exit();
-        // }
-
-        // if ($res) {
-        //    $page_content = include_template('view.php', ['gif' => $gif]);
-        // }  else {
-        //     $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
-        // }
 	}
 }
 
 $page_content = include_template('login.php', [
     'categories' => $categories,
     'errors' => $errors,
-    'user' => $user
+    'login' => $login
 ]);
 
 $layout_content = include_template('layout.php', [
 	'content'    => $page_content,
 	'categories' => $categories,
 	'title'      => $title,
-    'user_name' => $user_name,
-    'is_auth' => $is_auth,
-    'user_avatar' => $user_avatar
+    'user_name' => $user['name'],
+    'is_auth' => count($user),
+    'user_avatar' => $user['avatar']
 ]);
 
 print($layout_content);

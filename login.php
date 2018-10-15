@@ -2,6 +2,11 @@
 $title = 'Вход';
 require_once 'init.php';
 
+if (!empty($user)) {
+    header("Location: index.php");
+    exit();
+}
+
 $errors = [];
 $login = [];
 
@@ -16,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ];
 
     foreach ($required as $key) {
-		if (empty($_POST[$key])) {
+		if (empty(trim($_POST[$key]))) {
             $errors[$key] = 'Это поле надо заполнить';
 		}
     }
@@ -27,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
     }
 
-    $valid_user = validate_password($_POST['email'], $_POST['password'], $link);
+    $valid_user = validate_password(trim($_POST['email']), $_POST['password'], $link);
 
     if(!isset($valid_user['user'])){
         $errors = array_merge($errors, $valid_user);

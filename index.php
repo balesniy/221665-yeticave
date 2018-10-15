@@ -10,6 +10,15 @@ JOIN categories on category_id=categories.id
 WHERE finish > NOW()
 ORDER BY reg_date DESC';
 
+if(isset($_GET['category'])){
+    $category = intval($_GET['category']);
+    $sql = "SELECT lots.id, finish, name as title, start_amount as price, img as picture, categories.title as category
+    FROM lots
+    JOIN categories on category_id=categories.id
+    WHERE finish > NOW() AND category_id=$category
+    ORDER BY reg_date DESC";
+}
+
 $result = mysqli_query($link, $sql);
 if ($result) {
     $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);

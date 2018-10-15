@@ -27,6 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user))) {
 
         $user_id = $user['id'];
 
+        if($lot['user_id'] == $user_id){
+            http_response_code(400);
+            show_error('это ваш лот');
+        }
+
         $sql = "SELECT *
         FROM bets
         WHERE lots_id=$id AND user_id=$user_id";

@@ -54,9 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $filename = uniqid() . $type;
         $path = 'img/'.$filename;
         move_uploaded_file($_FILES['gif_img']['tmp_name'], $path);
-		$sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, ?, 1, ?)";
+		$sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, [
-            $lot['lot-name'], $lot['message'], $lot['category'], $lot['lot-rate'], $lot['lot-step'], $path, $lot['lot-date']
+            $lot['lot-name'], $lot['message'], $lot['category'], $lot['lot-rate'], $lot['lot-step'], $path, $user['id'], $lot['lot-date']
         ]);
         $res = mysqli_stmt_execute($stmt);
 

@@ -3,7 +3,7 @@
         <!--заполните этот список из массива категорий-->
         <?php foreach($categories as $value):?>
             <li class="nav__item">
-            <a href="/?category=<?=$value['category_id'] ?>"><?=$value['title'] ?></a>
+            <a class="promo__link" href="/?category=<?=$value['category_id'] ?>"><?=$value['title'] ?></a>
             </li>
         <?php endforeach; ?>
     </ul>
@@ -33,7 +33,7 @@
               </div>
             </div>
             <?php if(!empty($user) && !isset($user['error'])): ?>
-            <form class="lot-item__form" action="bet.php?id=<?=$lot['id'] ?>" method="post">
+            <form class="lot-item__form" action="bet.php?id=<?=$lot['lot_id'] ?>" method="post">
               <p class="lot-item__form-item">
                 <label for="cost">Ваша ставка</label>
                 <input id="cost" type="number" name="cost" placeholder="<?=price_format($lot['price']+$lot['amount_step']) ?>">
@@ -49,7 +49,7 @@
             <tr class="history__item">
                 <td class="history__name"><?=htmlspecialchars($value['name'])?></td>
                 <td class="history__price"><?=price_format($value['amount'])?></td>
-                <td class="history__time"><?=$value['reg_date']?></td>
+                <td class="history__time"><?=get_time($value['reg_date'])?></td>
               </tr>
             <?php endforeach; ?>
               

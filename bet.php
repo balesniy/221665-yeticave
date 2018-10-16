@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user))) {
             header('Location: lot.php?id='.$id);
         }
     } else {
-        show_error($errors);
+        show_error(var_dump($errors));
     }
     
 } else {

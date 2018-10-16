@@ -39,7 +39,7 @@ function price_format($price){
 function get_time($finish_time){
     $current_time = date_create('now');
     $lot_finish_time = date_create($finish_time);
-    $interval = date_diff($lot_finish_time, $current_time);
+    $interval = date_diff($current_time, $lot_finish_time);
     return $interval->format('%a дн. %H:%I');
 }
 
@@ -47,8 +47,10 @@ function validate_date($date, $key){
     if (!strtotime($date)) {
         return [$key => 'Введите дату'];
     }
-    if (date_diff(date_create($date), date_create('now'))->days < 1) {
-        return [$key => 'Введите завтрашнюю дату'];
+    $diff = date_diff(date_create('now'), date_create($date));
+    
+    if ($diff->days < 1 || $diff->invert) {
+        return [$key => 'Введите дату попозже'];
     }
 
     return [];
@@ -125,18 +127,22 @@ function validate_password($email, $password, $link){
     return ['password' => 'error'];
 }
 
-function validate_img($name){
+function validate_img($name, $required){
+    $error = [];
     if (is_uploaded_file($_FILES[$name]['tmp_name'])) {
 		$tmp_name = $_FILES[$name]['tmp_name'];
         $file_type = mime_content_type($tmp_name);
         
-        if ($file_type === "image/png" || $file_type === "image/jpeg") {
-            return [];
+        if ($file_type !== "image/png" && $file_type !== "image/jpeg") {
+            $error['file'] = 'Загрузите картинку в формате PNG или JPG';
         }
-        return ['file' => 'Загрузите картинку в формате PNG или JPG'];
 
-	}
-	return ['file' => 'Вы не загрузили файл'];
+	} else {
+        if ($required){
+            $error['file'] = 'Вы не загрузили файл';
+        }
+    }
+	return $error;
 }
 
 

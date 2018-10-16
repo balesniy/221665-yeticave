@@ -5,7 +5,7 @@ require_once 'init.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-$sql = "SELECT *, categories.title as category_title,
+$sql = "SELECT *, categories.title as category_title, lots.id as lot_id,
 GREATEST(COALESCE((select max(amount) from bets where lot_id=lots.id),0), start_amount) as price
 FROM lots
 JOIN categories on category_id=categories.id

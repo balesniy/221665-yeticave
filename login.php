@@ -56,9 +56,9 @@ $layout_content = include_template('layout.php', [
 	'content'    => $page_content,
 	'categories' => $categories,
 	'title'      => $title,
-    'user_name' => $user['name'],
+    'user_name' => '',
     'is_auth' => count($user),
-    'user_avatar' => $user['avatar']
+    'user_avatar' => ''
 ]);
 
 print($layout_content);

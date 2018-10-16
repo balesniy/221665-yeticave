@@ -8,7 +8,6 @@ if (!empty($user)) {
 }
 
 $errors = [];
-$user = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -33,11 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
     }
 
-    $errors = array_merge($errors, validate_email($_POST['email'], $link), validate_img('gif_img'));
+    $errors = array_merge($errors, validate_email($_POST['email'], $link), validate_img('gif_img', false));
 
     if (!count($errors)) {
         $type = mime_content_type($_FILES['gif_img']['tmp_name']) === "image/png" ? '.png' : '.jpg';
-        $filename = uniqid() . $type;
+        $filename = isset($_FILES['gif_img']['tmp_name']) ? uniqid() . $type : 'user.jpg';
         move_uploaded_file($_FILES['gif_img']['tmp_name'], 'img/' . $filename);
 
 		$sql = "INSERT INTO users (name, email, password, avatar, contact) VALUES(?, ?, ?, ?, ?)";
@@ -51,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: login.php");
             exit();
         }
-	}
+	} 
 }
 
 $page_content = include_template('sign-up.php', [
@@ -64,9 +63,9 @@ $layout_content = include_template('layout.php', [
 	'content'    => $page_content,
 	'categories' => $categories,
 	'title'      => $title,
-    'user_name' => $user['name'],
-    'is_auth' => count($user),
-    'user_avatar' => $user['avatar']
+    'user_name' => '',
+    'is_auth' => false,
+    'user_avatar' => ''
 ]);
 
 print($layout_content);

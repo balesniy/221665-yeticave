@@ -3,7 +3,7 @@
         <!--заполните этот список из массива категорий-->
         <?php foreach($categories as $value):?>
             <li class="nav__item">
-            <a href="/?category=<?=$value['category_id'] ?>"><?=$value['title'] ?></a>
+            <a class="promo__link" href="/?category=<?=$value['category_id'] ?>"><?=$value['title'] ?></a>
             </li>
         <?php endforeach; ?>
     </ul>

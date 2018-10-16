@@ -3,7 +3,7 @@
         <!--заполните этот список из массива категорий-->
         <?php foreach($categories as $value):?>
             <li class="nav__item">
-            <a href="/?category=<?=$value['category_id'] ?>"><?=$value['title'] ?></a>
+            <a class="promo__link" href="/?category=<?=$value['category_id'] ?>"><?=$value['title'] ?></a>
             </li>
         <?php endforeach; ?>
     </ul>
@@ -64,7 +64,7 @@
         <div class="form__item <?=isset($errors['lot-date']) ? 'form__item--invalid' : '' ?>">
           <label for="lot-date">Дата окончания торгов</label>
           <input class="form__input-date" id="lot-date" type="date" name="lot-date" value="<?=isset($lot['lot-date']) ? $lot['lot-date'] : '' ?>">
-          <span class="form__error">Введите дату завершения торгов</span>
+          <span class="form__error"><?=isset($errors['lot-date']) ? $errors['lot-date'] : '' ?></span>
         </div>
       </div>
       <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>

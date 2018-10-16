@@ -5,6 +5,7 @@ require_once 'init.php';
 $errors = [];
 $lot = [];
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (empty($user)) {
@@ -47,19 +48,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
     }
     
-    $errors = array_merge($errors, validate_category($_POST['category'], $link), validate_img('gif_img'));
+    $errors = array_merge($errors, validate_category($_POST['category'], $link), validate_img('gif_img', true));
     
     if (!count($errors)) {
         $type = mime_content_type($_FILES['gif_img']['tmp_name']) === "image/png" ? '.png' : '.jpg';
         $filename = uniqid() . $type;
         $path = 'img/'.$filename;
         move_uploaded_file($_FILES['gif_img']['tmp_name'], $path);
+        $date = date("Y-m-d H:i:s", strtotime($lot['lot-date']));
 		$sql = "INSERT INTO lots (name, description, category_id, start_amount, amount_step, img, user_id, finish) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, [
-            $lot['lot-name'], $lot['message'], $lot['category'], $lot['lot-rate'], $lot['lot-step'], $path, $user['id'], $lot['lot-date']
+            $lot['lot-name'], $lot['message'], $lot['category'], $lot['lot-rate'], $lot['lot-step'], $path, $user['id'], $date
         ]);
         $res = mysqli_stmt_execute($stmt);
-
+    
         if ($res) {
             $lot_id = mysqli_insert_id($link);
 
@@ -68,7 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	}
 
-} 
+}
+
+if (empty($user)) {
+    header("Location: login.php");
+    exit();
+}
 
 $page_content = include_template('add.php', [
     'categories' => $categories,

@@ -22,7 +22,7 @@ if (!mysqli_num_rows($result)) {
 }
 $lot = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
-$user_id = $user['id'];
+$user_id = isset($user['id']) ? $user['id'] : 0;
 
 if($lot['user_id'] == $user_id){
     
@@ -66,9 +66,9 @@ $layout = include_template('layout.php', [
     'content' => $content,
     'categories' => $categories,
     'title' => $title,
-    'user_name' => $user['name'],
+    'user_name' => isset($user['name']) ? $user['name'] : '',
     'is_auth' => count($user),
-    'user_avatar' => $user['avatar']
+    'user_avatar' => isset($user['avatar']) ? $user['avatar'] : ''
 ]);
 
 print($layout);

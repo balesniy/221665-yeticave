@@ -35,9 +35,9 @@ $layout = include_template('layout.php', [
     'content' => $content,
     'categories' => $categories,
     'title' => $title,
-    'user_name' => $user['name'],
+    'user_name' => isset($user['name']) ? $user['name'] : '',
     'is_auth' => count($user),
-    'user_avatar' => $user['avatar']
+    'user_avatar' => isset($user['avatar']) ? $user['avatar'] : ''
 ]);
 
 print($layout);

@@ -69,20 +69,17 @@ function validate_number($number, $key){
 
 function validate_category($id, $link){
     $id = intval($id);
+    $error = [];
     if (!$id) {
-        return ['category' => 'Выберите категорию'];
+        $error['category'] = 'Выберите категорию';
     } else {
         $sql = "SELECT * FROM categories WHERE id=$id";
         $result = mysqli_query($link, $sql);
-        if (!$result){
-           
-            return ['category' => 'Ошибка sql'];
-        }
         if (!mysqli_num_rows($result)) {
-            return ['category' => 'Выберите категорию'];
+            $error['category'] = 'Выберите категорию';
         }
     }
-    return [];
+    return $error;
 }
 
 function validate_email($email, $link){

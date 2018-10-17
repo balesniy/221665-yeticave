@@ -3,21 +3,17 @@ $title = 'Главная';
 
 require_once 'init.php';
  
-
-$sql = 'SELECT lots.id, finish, name as title, start_amount as price, img as picture, categories.title as category
-FROM lots
-JOIN categories on category_id=categories.id
-WHERE finish > NOW()
-ORDER BY reg_date DESC';
-
+$sql_category = "";
 if(isset($_GET['category'])){
     $category = intval($_GET['category']);
-    $sql = "SELECT lots.id, finish, name as title, start_amount as price, img as picture, categories.title as category
-    FROM lots
-    JOIN categories on category_id=categories.id
-    WHERE finish > NOW() AND category_id=$category
-    ORDER BY reg_date DESC";
+    $sql_category = " AND category_id=$category";
 }
+
+$sql = "SELECT lots.id, finish, name as title, start_amount as price, img as picture, categories.title as category
+FROM lots
+JOIN categories on category_id=categories.id
+WHERE finish > NOW() $sql_category
+ORDER BY reg_date DESC";
 
 $result = mysqli_query($link, $sql);
 if ($result) {

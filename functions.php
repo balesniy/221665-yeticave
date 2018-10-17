@@ -84,21 +84,18 @@ function validate_category($id, $link){
 
 function validate_email($email, $link){
     $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+    $error = [];
     if (!$email) {
-        return ['email' => 'Введите корректный email'];
+        $error['email'] = 'Введите корректный email';
     } else {
         $email = mysqli_real_escape_string($link, $email);
         $sql = "SELECT * FROM users WHERE email='$email'";
         $result = mysqli_query($link, $sql);
-        if (!$result){
-
-            return ['email' => 'Ошибка sql'];
-        }
         if (mysqli_num_rows($result)) {
-            return ['email' => 'email занят'];
+            $error['email'] = 'email занят';
         }
     }
-    return [];
+    return $error;
 }
 
 function validate_password($email, $password, $link){

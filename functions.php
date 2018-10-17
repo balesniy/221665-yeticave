@@ -44,27 +44,29 @@ function get_time($finish_time){
 }
 
 function validate_date($date, $key){ 
+    $result = [];
     if (!strtotime($date)) {
-        return [$key => 'Введите дату'];
-    }
-    $diff = date_diff(date_create('now'), date_create($date));
+        $result = [$key => 'Введите дату'];
+    } else {
+        $diff = date_diff(date_create('now'), date_create($date));
     
-    if ($diff->days < 1 || $diff->invert) {
-        return [$key => 'Введите дату попозже'];
+        if ($diff->days < 1 || $diff->invert) {
+            $result = [$key => 'Введите дату попозже'];
+        }
     }
-
-    return [];
+    return $result;
 }
 
 function validate_number($number, $key){ 
+    $result = [];
+    
     if (!is_numeric($number)) {
-        return [$key => 'Введите число'];
+        $result = [$key => 'Введите число'];
     }
-    if (intval($number) <= 0) {
-        return [$key => 'Введите целое положительное число'];
+    elseif(intval($number) <= 0) {
+        $result =  [$key => 'Введите целое положительное число'];
     }
-
-    return [];
+    return $result;
 }
 
 function validate_category($id, $link){
@@ -82,43 +84,45 @@ function validate_category($id, $link){
     return $error;
 }
 
-function validate_email($email, $link){
-    $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+function get_by_email($email, $link, $exist) {
     $error = [];
+    $user = null;
+    $email = filter_var($email, FILTER_VALIDATE_EMAIL);
     if (!$email) {
         $error['email'] = 'Введите корректный email';
     } else {
         $email = mysqli_real_escape_string($link, $email);
         $sql = "SELECT * FROM users WHERE email='$email'";
         $result = mysqli_query($link, $sql);
-        if (mysqli_num_rows($result)) {
+        if (mysqli_num_rows($result) && $exist) {
             $error['email'] = 'email занят';
         }
+        if (mysqli_num_rows($result) && !$exist) {
+            $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        }
+        if (!mysqli_num_rows($result) && !$exist) {
+            $error['email'] = 'пользователь не найден';
+        }
     }
-    return $error;
+   
+    return $exist ? $error : ['error' => $error, 'user' => $user];
+}
+
+function validate_email($email, $link){
+    return get_by_email($email, $link, true);
 }
 
 function validate_password($email, $password, $link){
-    $email = filter_var($email, FILTER_VALIDATE_EMAIL);
-    if (!$email) {
-        return ['email' => 'Введите корректный email'];
-    }
-    $email = mysqli_real_escape_string($link, $email); 
-    $sql = "SELECT * FROM users WHERE email='$email'";
-    $result = mysqli_query($link, $sql);
-    if (!$result){
-        return ['email' => 'Ошибка sql'];
-    }
-    if (!mysqli_num_rows($result)) {
-        return ['email' => 'пользователь не найден'];
-    }
-    $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    $auth = password_verify($password, $user['password']);
-    if ($auth) {
-        return ['user' => $user];
+    $result = get_by_email($email, $link, false);
+    $user = $result['user'];
+    $error = $result['error'];
+
+    if ($user) {
+        $auth = password_verify($password, $user['password']);
+        $error = $auth ? ['user' => $user] : ['password' => 'error'];
     }
 
-    return ['password' => 'error'];
+    return $error;
 }
 
 function validate_img($name, $required){

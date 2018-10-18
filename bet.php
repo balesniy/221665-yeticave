@@ -75,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user))) {
             header('Location: lot.php?id='.$id);
         }
     } else {
-        $error_message = $errors;
-        show_error($error_message);
+        $errors['лот'] = "<a href='lot.php?id=$id'>перейти к лоту</a>";
+        show_error($errors);
     }
     
 } else {

@@ -40,7 +40,23 @@ function get_time($finish_time){
     $current_time = date_create('now');
     $lot_finish_time = date_create($finish_time);
     $interval = date_diff($current_time, $lot_finish_time);
-    return $interval->format('%a дн. %H:%I');
+    if($interval->invert){
+        if($diff->days < 1){
+            $result = $interval->format('%H ч. %I мин. назад');
+        }
+
+        if($diff->days < 3 && $diff->days >= 1){
+            $result = $interval->format('%a дн. назад');
+        }
+
+        if($diff->days >=3){
+            $result = $lot_finish_time->format('d-m-Y');
+        }
+        
+    } else {
+        $result = $interval->format('%a дн. %H:%I');
+    }
+    return $result;
 }
 
 function validate_date($date, $key){ 
@@ -51,7 +67,7 @@ function validate_date($date, $key){
         $diff = date_diff(date_create('now'), date_create($date));
     
         if ($diff->days < 1 || $diff->invert) {
-            $result = [$key => 'Введите дату попозже'];
+            $result = [$key => 'выберите дату больше текущей'];
         }
     }
     return $result;

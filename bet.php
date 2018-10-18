@@ -10,7 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user))) {
 
     $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-        $sql = "SELECT *
+        $sql = "SELECT *,
+        GREATEST(COALESCE((select max(amount) from bets where lot_id=lots.id),0), start_amount) as price
         FROM lots
         WHERE lots.id=$id";
 

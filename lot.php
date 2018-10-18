@@ -30,7 +30,7 @@ if($lot['user_id'] == $user_id){
 }
 
 
-$sql = "SELECT * FROM bets JOIN users ON user_id=users.id WHERE lot_id=$id ORDER BY bets.reg_date DESC";
+$sql = "SELECT *, bets.reg_date as bet_reg_date FROM bets JOIN users ON user_id=users.id WHERE lot_id=$id ORDER BY bets.reg_date DESC";
 
 $result = mysqli_query($link, $sql);
 if (!$result){

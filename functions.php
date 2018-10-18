@@ -37,19 +37,20 @@ function price_format($price){
 }
 
 function get_time($finish_time){
+  
     $current_time = date_create('now');
     $lot_finish_time = date_create($finish_time);
     $interval = date_diff($current_time, $lot_finish_time);
     if($interval->invert){
-        if($diff->days < 1){
+        if($interval->days < 1){
             $result = $interval->format('%H ч. %I мин. назад');
         }
 
-        if($diff->days < 3 && $diff->days >= 1){
+        if($interval->days < 3 && $interval->days >= 1){
             $result = $interval->format('%a дн. назад');
         }
 
-        if($diff->days >=3){
+        if($interval->days >=3){
             $result = $lot_finish_time->format('d-m-Y');
         }
         

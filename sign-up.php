@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $errors = array_merge($errors, validate_email($_POST['email'], $link), validate_img('gif_img', false));
 
-    if(isset($_FILES['gif_img']['tmp_name']) && !count($errors)) {
+    if(is_uploaded_file($_FILES['gif_img']['tmp_name']) && !count($errors)) {
         $type = mime_content_type($_FILES['gif_img']['tmp_name']) === "image/png" ? '.png' : '.jpg';
         $filename = uniqid() . $type;
         move_uploaded_file($_FILES['gif_img']['tmp_name'], 'img/' . $filename);

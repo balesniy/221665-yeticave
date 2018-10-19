@@ -46,7 +46,7 @@ function get_time($finish_time){
         }
 
         if($interval->days < 1 && $interval->h<1){
-            $result = $interval->format('%I мин. назад');
+            $result = $interval->i? $interval->format('%I мин. назад') : 'только что';
         }
 
         if($interval->days < 3 && $interval->days >= 1){

@@ -70,8 +70,8 @@ function validate_date($date, $key){
     } else {
         $diff = date_diff(date_create('now'), date_create($date));
     
-        if ($diff->invert || $diff->date < 1) {
-            $result = [$key => 'выберите дату больше текущей'];
+        if ($diff->invert || $diff->days < 1) {
+            $result = [$key => 'выберите дату больше текущей хотябы на один день'];
         }
     }
     return $result;

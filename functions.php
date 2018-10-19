@@ -37,7 +37,6 @@ function price_format($price){
 }
 
 function get_time($finish_time){
-  
     $current_time = date_create('now');
     $lot_finish_time = date_create($finish_time);
     $interval = date_diff($current_time, $lot_finish_time);
@@ -71,7 +70,7 @@ function validate_date($date, $key){
     } else {
         $diff = date_diff(date_create('now'), date_create($date));
     
-        if ($diff->invert) {
+        if ($diff->invert || $diff->date < 1) {
             $result = [$key => 'выберите дату больше текущей'];
         }
     }

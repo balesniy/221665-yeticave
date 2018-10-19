@@ -33,10 +33,11 @@
               </div>
             </div>
             <?php if(!empty($user) && !isset($user['error'])): ?>
-            <form class="lot-item__form" action="bet.php?id=<?=$lot['lot_id'] ?>" method="post">
-              <p class="lot-item__form-item">
-                <label for="cost">Ваша ставка</label>
-                <input id="cost" type="number" name="cost" placeholder="<?=price_format($lot['price']+$lot['amount_step']) ?>">
+            <form class="lot-item__form" action="lot.php?id=<?=$lot['lot_id'] ?>" method="post">
+              <p class="lot-item__form-item <?= (!empty($errors)) ? "form__item--invalid" : "";?>"> 
+                <label for="cost">Ваша ставка</label> 
+                <input id="cost" type="number" name="cost" placeholder="<?=price_format($lot['price']+$lot['amount_step']) ?>"> 
+                <span class="form__error"><?=!empty($errors['cost']) ? $errors['cost'] : ""?></span> 
               </p>
               <button type="submit" class="button">Сделать ставку</button>
             </form>

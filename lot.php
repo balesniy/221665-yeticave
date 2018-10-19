@@ -2,6 +2,7 @@
 $title = 'Лот';
 require_once 'init.php';
  
+$errors = [];
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -29,6 +30,56 @@ if($lot['user_id'] == $user_id){
     $user['error'] = 'это ваш лот';
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !(empty($user)) && !isset($user['error'])) {
+    
+    $required = ['cost'];
+    $numbers = ['cost'];
+    
+    $user_id = $user['id'];
+    
+     $sql = "SELECT *
+        FROM bets
+        WHERE lot_id=$id AND user_id=$user_id";
+
+    $result = mysqli_query($link, $sql);
+    if (!$result){
+        $error = mysqli_error($link);
+        show_error($error);
+    }
+    if (mysqli_num_rows($result)) {
+        $errors['user'] = 'ставка уже сделана';
+    }
+
+
+    foreach ($required as $key) {
+		if (empty(trim($_POST[$key]))) {
+            $errors[$key] = 'Это поле надо заполнить';
+		}
+    }
+
+    foreach ($numbers as $key) {
+		if (empty($errors[$key])) {
+            $errors = array_merge($errors, validate_number($_POST[$key], $key));
+		}
+    }
+
+    if ($lot['price']+$lot['amount_step']>intval($_POST['cost'])){
+        $errors['cost'] = 'слишком мало';
+    }
+
+    if (!count($errors)) {
+        $sql = "INSERT INTO bets (amount, user_id, lot_id) VALUES(?, ?, ?)";
+        $stmt = db_get_prepare_stmt($link, $sql, [
+            $_POST['cost'], $user['id'], $id
+        ]);
+        $res = mysqli_stmt_execute($stmt);
+
+        if ($res) {
+
+            header('Location: lot.php?id='.$id);
+        }
+    }
+}
 
 $sql = "SELECT *, bets.reg_date as bet_reg_date FROM bets JOIN users ON user_id=users.id WHERE lot_id=$id ORDER BY bets.reg_date DESC";
 
@@ -59,7 +110,8 @@ $content = include_template('lot.php', [
     'categories' => $categories,
     'lot' => $lot,
     'bets' => $bets,
-    'user' => $user
+    'user' => $user,
+    'errors' => $errors
 ]);
 
 $layout = include_template('layout.php', [

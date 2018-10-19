@@ -1,6 +1,6 @@
 <?php
 
-date_default_timezone_set('Europe/Moscow');
+date_default_timezone_set('Europe/Rome');
 
 session_start();
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : [];

@@ -36,17 +36,17 @@ function price_format($price){
     return "$rub_format ₽";
 }
 
-function get_time($finish_time){
+function get_time($finish_time, $invert = false){
     $current_time = date_create('now');
     $lot_finish_time = date_create($finish_time);
     $interval = date_diff($current_time, $lot_finish_time);
     if($interval->invert){
         if($interval->days < 1 && $interval->h>=1){
-            $result = $interval->format('%H ч. назад');
+            $result = $interval->format('%h ч. назад');
         }
 
         if($interval->days < 1 && $interval->h<1){
-            $result = $interval->i? $interval->format('%I мин. назад') : 'только что';
+            $result = $interval->i? $interval->format('%i мин. назад') : 'только что';
         }
 
         if($interval->days < 3 && $interval->days >= 1){
@@ -57,8 +57,12 @@ function get_time($finish_time){
             $result = $lot_finish_time->format('d-m-Y');
         }
         
-    } else {
-        $result = $interval->format('%a дн. %H:%I');
+    } elseif ($invert){
+        $result = 'только что';
+    }
+    
+    else {
+        $result = $interval->format('%a дн. %h:%i');
     }
     return $result;
 }

@@ -50,7 +50,7 @@
             <tr class="history__item">
                 <td class="history__name"><?=htmlspecialchars($value['name'])?></td>
                 <td class="history__price"><?=price_format($value['amount'])?></td>
-                <td class="history__time"><?=get_time($value['bet_reg_date'])?></td>
+                <td class="history__time"><?=get_time($value['bet_reg_date'], true)?></td>
               </tr>
             <?php endforeach; ?>
               
